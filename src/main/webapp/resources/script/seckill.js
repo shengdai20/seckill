@@ -1,4 +1,5 @@
 //存放主要交互逻辑js代码
+//js模块化
 
 var seckill = {
 	//封装秒杀相关ajax的url
@@ -13,6 +14,8 @@ var seckill = {
 			return '/seckill/' + seckillId + '/' + md5 + '/execution';
 		}
 	},
+	
+	//处理秒杀逻辑
 	handleSeckillkill: function(seckillId, node) {
 		//获取秒杀地址，控制显示逻辑，执行秒杀
 		node.hide()
@@ -59,6 +62,7 @@ var seckill = {
 			}
 		});
 	},
+	
 	//验证手机号
 	validatePhone: function(phone) {
 		if(phone && phone.length == 11 && !isNaN(phone)) {
@@ -68,6 +72,8 @@ var seckill = {
 			return false;
 		}
 	},
+	
+	//时间判断，计时交互
 	countdown: function(seckillId, nowTime, startTime, endTime) {
 		var seckillBox = $('#seckill-box');
 		//时间判断
@@ -76,9 +82,12 @@ var seckill = {
 			seckillBox.html('秒杀结束！');
 		}
 		else if(nowTime < startTime) {
-			//秒杀未开始，计时事件绑定
+			
+			//加1秒，防止时间偏移
 			var killTime = new Date(startTime + 1000);
 			
+			//jquery提供的countdown函数
+			//秒杀未开始，计时事件绑定
 			seckillBox.countdown(killTime, function(event) {
 				//时间格式
 				var format = event.strftime('秒杀倒计时： %D天  %H时  %M分  %S秒');
@@ -94,6 +103,7 @@ var seckill = {
 			seckill.handleSeckillkill(seckillId, seckillBox);
 		}
 	},
+	
 	//详情页秒杀逻辑
 	detail: {
 		//详情页初始化
@@ -105,7 +115,7 @@ var seckill = {
 			//验证手机号
 			if(!seckill.validatePhone(killPhone)) {
 				//绑定phone
-				//控制输出
+				//控制输出,获取弹出框
 				var killPhoneModal = $('#killPhoneModal');
 				//显示弹出层
 				killPhoneModal.modal({
@@ -113,13 +123,16 @@ var seckill = {
 					backdrop: 'static',//禁止位置关闭
 					keyboard: false//关闭键盘事件
 				});
+				//绑定点击事件
 				$('#killPhoneBtn').click(function() {
 					var inputPhone = $('#killPhoneKey').val();
+					//输出到浏览器中的console中
 					console.log('inputPhone = ' + inputPhone);
 					if(seckill.validatePhone(inputPhone)) {
 						//电话写入cookie
+						//killPhone是key，inputPhone是值，cookie有限期这里是7天，路径是只在/seckill下有效
 						$.cookie('killPhone', inputPhone, {expires: 7, path:'/seckill' });
-						//刷新页面
+						//刷新页面，重走一遍方法
 						window.location.reload();
 					}
 					else {
@@ -132,6 +145,7 @@ var seckill = {
 			var startTime = params['startTime'];
 			var endTime = params['endTime'];
 			var seckillId = params['seckillId'];
+			//通过url从后台获取到的数据通过result参数传入
 			$.get(seckill.URL.now(), {}, function(result) {
 				if(result && result['success']) {
 					var nowTime = result['data'];

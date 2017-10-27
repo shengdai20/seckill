@@ -23,7 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
+/**
+ * 
+ * @author cq
+ *
+ */
+@Controller//利用注解将当前类放入applicationContext容器中
 //url:/模块/资源/{id}/细分
 public class SeckillController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -59,10 +64,11 @@ public class SeckillController {
 	@RequestMapping(value = "/{seckillId}/exposer", 
 			method = RequestMethod.POST, 
 			produces = {"application/json;charset=utf-8"})
-	@ResponseBody
+	@ResponseBody//自动封装成JSON格式，前台看到的数据也就是JSON格式的
 	public SeckillResult<Exposer> exposer(@PathVariable("seckillId")Long seckillId) {
 		SeckillResult<Exposer> result;
 		try {
+			//返回暴露url
 			Exposer exposer = seckillService.exportSeckillUrl(seckillId);
 			result = new SeckillResult<Exposer>(true, exposer);
 			
@@ -86,15 +92,19 @@ public class SeckillController {
 		}
 		SeckillResult<SeckillExecution> result;
 		try {
-			SeckillExecution execution = seckillService.executeSeckill(seckillId, phone, md5);
+			//执行秒杀，存储过程调用，
+			SeckillExecution execution = seckillService.executeSeckillProcedure(seckillId, phone, md5);
 			return new SeckillResult<SeckillExecution>(true, execution);
 		} catch(RepeatKillException e) {
+			//重复秒杀异常
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.REPEAT_KILL);
 			return new SeckillResult<SeckillExecution>(true, execution);
 		} catch(SeckillCloseException e) {
+			//秒杀关闭异常
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.END);
 			return new SeckillResult<SeckillExecution>(true, execution);
 		} catch(Exception e) {
+			//内部错误异常
 			logger.error(e.getMessage(), e);
 			SeckillExecution execution = new SeckillExecution(seckillId, SeckillStatEnum.INNER_ERROR);
 			return new SeckillResult<SeckillExecution>(true, execution);

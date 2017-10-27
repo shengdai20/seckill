@@ -12,13 +12,14 @@ public class SeckillExecution {
 
 	private long seckillId;
 	
-	//秒杀执行结果状态
+	//秒杀执行结果状态，标记是否秒杀成功
 	private int state;
-	//状态标识
+	//状态标识，描述秒杀状态信息
 	private String stateInfo;
 	//秒杀成功对象
 	private SuccessKilled successKilled;
 	
+	//利用枚举来防止状态和状态描述
 	public SeckillExecution(long seckillId, SeckillStatEnum statEnum, SuccessKilled successKilled) {
 		this.seckillId = seckillId;
 		this.state = statEnum.getState();

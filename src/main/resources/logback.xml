@@ -2,6 +2,7 @@
 
 <configuration>
 
+<!-- 往控制台打印 -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
@@ -9,7 +10,7 @@
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
-
+<!-- 打印级别 -->
   <root level="debug">
     <appender-ref ref="STDOUT" />
   </root>

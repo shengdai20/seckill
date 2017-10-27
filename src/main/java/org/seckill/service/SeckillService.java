@@ -32,6 +32,7 @@ public interface SeckillService {
 
 	/**
 	 * 秒杀开启时输出秒杀接口地址，否则输出系统时间和秒杀时间
+	 * 利用一个标记来标记秒杀是否开始
 	 * @param seckillId
 	 */
 	Exposer exportSeckillUrl(long seckillId);
@@ -44,4 +45,14 @@ public interface SeckillService {
 	 */
 	SeckillExecution executeSeckill(long seckillId, long userPhone, String md5)
 		throws SeckillException, RepeatKillException, SeckillCloseException;
+
+	/**
+	 * 执行秒杀操作by存储过程
+	 * @param seckillId
+	 * @param userPhone
+	 * @param md5
+	 */
+	SeckillExecution executeSeckillProcedure(long seckillId, long userPhone, String md5)
+		throws SeckillException, RepeatKillException, SeckillCloseException;
+
 }

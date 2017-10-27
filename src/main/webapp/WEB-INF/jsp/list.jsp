@@ -36,6 +36,7 @@
 								<td>${sk.name }</td>
 								<td>${sk.number }</td>
 								<td>
+								<!-- 日期格式转换 -->
 									<fmt:formatDate value = "${sk.startTime }" pattern = "yyyy-MM-dd HH:mm:ss" />
 								</td>
 								<td>

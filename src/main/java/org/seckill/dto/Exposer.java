@@ -1,7 +1,7 @@
 package org.seckill.dto;
 
 /**
- * 暴露秒杀地址DTO
+ * 暴露秒杀地址DTO，方便service的返回数据的封装
  * @author cq
  *
  */

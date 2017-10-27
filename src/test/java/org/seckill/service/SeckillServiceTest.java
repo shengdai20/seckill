@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+//要加入dao的xml，是因为要测试service层，需要依赖dao的xml
 @ContextConfiguration({
 	"classpath:spring/spring-dao.xml",
 	"classpath:spring/spring-service.xml"
@@ -47,8 +48,8 @@ public class SeckillServiceTest {
 		Exposer exposer = seckillService.exportSeckillUrl(id);
 		if(exposer.isExposed()) {
 			logger.info("exposer={}", exposer);
-			long phone = 15623655487L;
-			String md5 = "96f58c63d864ecd07475787e10c2c5bc";
+			long phone = 15623355407L;
+			String md5 = exposer.getMd5();
 			try {
 				SeckillExecution execution = seckillService.executeSeckill(id, phone, md5);
 				logger.info("result={}", execution);
@@ -63,6 +64,7 @@ public class SeckillServiceTest {
 			logger.warn("exposer={}", exposer);
 		}
 	}
+	
 	@Test
 	public void testExportSeckillUrl() throws Exception {
 		long id = 1000L;
@@ -73,7 +75,7 @@ public class SeckillServiceTest {
 	@Test
 	public void testExecuteSeckill() throws Exception {
 		long id = 1000L;
-		long phone = 15623655487L;
+		long phone = 15623655480L;
 		String md5 = "96f58c63d864ecd07475787e10c2c5bc";
 		try {
 			SeckillExecution execution = seckillService.executeSeckill(id, phone, md5);
@@ -82,6 +84,19 @@ public class SeckillServiceTest {
 			logger.error(e.getMessage());
 		} catch(SeckillCloseException e) {
 			logger.error(e.getMessage());
+		}
+	}
+	
+	@Test
+	public void executeSeckillProcedure() {
+		long seckillId = 1001;
+		long phone = 13652369563l;
+		Exposer exposer = seckillService.exportSeckillUrl(seckillId);
+		System.out.println(exposer.getMd5());
+		if(exposer.isExposed()) {
+			String md5 = exposer.getMd5();
+			SeckillExecution execution = seckillService.executeSeckillProcedure(seckillId, phone, md5);
+			logger.info(execution.getStateInfo());
 		}
 		
 	}
